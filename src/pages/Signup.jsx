@@ -24,18 +24,37 @@ const Signup = () => {
           password
         );
         login(cred.user);
+        setEmail('');
+        setPassword('');
       } catch (err) {
-        setError(err.message);
+        if (err.code === 'auth/email-already-in-use') {
+          setError('Email is already in use');
+        } else if (err === 'auth/invalid-credential') {
+          setError('invalid-credential');
+        } else {
+          setError('Try after sometime!');
+        }
+
+        setEmail('');
+        setPassword('');
       }
     } else {
       try {
         const cred = await signInWithEmailAndPassword(auth, email, password);
         login(cred.user);
+        setEmail('');
+        setPassword('');
       } catch (err) {
         setError(err.message);
+        setEmail('');
+        setPassword('');
       }
     }
   };
+
+  setTimeout(() => {
+    setError(null);
+  }, 3000);
 
   return (
     <div className="hero min-h-screen bg-base-200">
